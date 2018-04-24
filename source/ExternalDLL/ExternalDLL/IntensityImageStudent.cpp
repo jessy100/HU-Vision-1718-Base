@@ -1,75 +1,78 @@
 #include "IntensityImageStudent.h"
 
 IntensityImageStudent::IntensityImageStudent() : IntensityImage() {
-	int throwError = 0, e = 1 / throwError; //Throws error without the need to include a header
-	//TODO: Nothing
+	pixels = new Intensity[0];
 }
 
-IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &other) : IntensityImage(other.getWidth(), other.getHeight()) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: Create a copy from the other object
+IntensityImageStudent::IntensityImageStudent(const IntensityImageStudent &copy) : IntensityImage{ copy.getWidth(), copy.getHeight() } {
+	pixels = new Intensity[copy.getWidth() * copy.getHeight()];
+
+	for (int i = 0; i < this->getWidth() * this->getHeight(); i++) 
+		pixels[i] = copy.getPixel(i);
+}
+
+IntensityImageStudent::IntensityImageStudent(const IntensityImage &other) : IntensityImage{ other.getWidth(), other.getHeight() } {
+	pixels = new Intensity[other.getWidth() * other.getHeight()];
+
+	for (int i = 0; i < this->getWidth() * this->getHeight(); i++) 
+		pixels[i] = other.getPixel(i);
 }
 
 IntensityImageStudent::IntensityImageStudent(const int width, const int height) : IntensityImage(width, height) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: Initialize pixel storage
+	pixels = new Intensity[width * height]();
 }
 
 IntensityImageStudent::~IntensityImageStudent() {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: delete allocated objects
+	//int throwError = 0, e = 1 / throwError;
+	//implement destructor
 }
 
 void IntensityImageStudent::set(const int width, const int height) {
+	
 	IntensityImage::set(width, height);
-	int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage (Don't forget to delete the old storage)
+	pixels = new Intensity[width * height];
 }
 
 void IntensityImageStudent::set(const IntensityImageStudent &other) {
 	IntensityImage::set(other.getWidth(), other.getHeight());
-	int throwError = 0, e = 1 / throwError;
-	//TODO: resize or create a new pixel storage and copy the object (Don't forget to delete the old storage)
+
+	for (int i = 0; i < this->getHeight()*this->getWidth(); i++) 
+		pixels[i] = other.getPixel(i);
 }
 
 void IntensityImageStudent::setPixel(int x, int y, Intensity pixel) {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
+	if (!(x < 0 || x >= getWidth() || y < 0 || y >= getHeight()))
+		pixels[y * this->getWidth() + x] = pixel;
 }
 
 void IntensityImageStudent::setPixel(int i, Intensity pixel) {
-	int throwError = 0, e = 1 / throwError;
-	/*
-	* TODO: set pixel i in "Row-Major Order"
-	*
-	*
-	* Original 2d image (values):
-	* 9 1 2
-	* 4 3 5
-	* 8 7 8
-	*
-	* 1d representation (i, value):
-	* i		value
-	* 0		9
-	* 1		1
-	* 2		2
-	* 3		4
-	* 4		3
-	* 5		5
-	* 6		8
-	* 7		7
-	* 8		8
-	*/
+	if (!(i < 0 || i >= getHeight() * getWidth())) 
+		pixels[i] = pixel;
+
 }
 
 Intensity IntensityImageStudent::getPixel(int x, int y) const {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: no comment needed :)
-	return 0;
+	if (x < 0)
+		x = 0;
+
+	if (y < 0)
+		y = 0;
+
+	if (x >= getWidth())
+		x = getWidth() - 1;
+	
+	if (y >= getHeight())
+		y = getHeight() - 1;
+	
+	return pixels[y * this->getWidth() + x];
 }
 
 Intensity IntensityImageStudent::getPixel(int i) const {
-	int throwError = 0, e = 1 / throwError;
-	//TODO: see setPixel(int i, RGB pixel)
-	return 0;
+	if (i < 0)
+		i = 0;
+
+	if (i >= getHeight() * getWidth())
+		i = getHeight() * getWidth() - 1;
+	
+	return pixels[i];
 }

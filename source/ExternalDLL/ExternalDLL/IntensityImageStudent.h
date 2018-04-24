@@ -6,11 +6,15 @@
 
 #pragma once
 #include "IntensityImage.h"
+#include "RGBImageStudent.h"
+#include <math.h>
+
 class IntensityImageStudent : public IntensityImage {
 public:
 	IntensityImageStudent();
 	IntensityImageStudent(const IntensityImageStudent &other);
 	IntensityImageStudent(const int width, const int height);
+	IntensityImageStudent(const IntensityImage & other);
 	~IntensityImageStudent();
 
 	void set(const int width, const int height);
@@ -21,4 +25,8 @@ public:
 
 	Intensity getPixel(int x, int y) const;
 	Intensity getPixel(int i) const;
+
+
+private:
+	Intensity * pixels;
 };
