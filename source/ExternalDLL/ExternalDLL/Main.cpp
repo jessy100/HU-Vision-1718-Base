@@ -9,6 +9,12 @@
 #include "HereBeDragons.h"
 #include "ImageFactory.h"
 #include "DLLExecution.h"
+#include <chrono>
+
+using  ms = std::chrono::milliseconds;
+using  ns = std::chrono::nanoseconds;
+
+using get_time = std::chrono::steady_clock;
 
 void drawFeatureDebugImage(IntensityImage &image, FeatureMap &features);
 bool executeSteps(DLLExecution * executor);
@@ -23,7 +29,7 @@ int main(int argc, char * argv[]) {
 	ImageIO::isInDebugMode = true; //If set to false the ImageIO class will skip any image save function calls
 
 	RGBImage * input = ImageFactory::newRGBImage();
-	if (!ImageIO::loadImage("C:\\Users\\Jessy\\Desktop\\Dev\\HU-Vision-1718-Base\\testsets\\Set A\\TestSet Images\\female-1.png", *input)) {
+	if (!ImageIO::loadImage("C:\\Users\\Jessy\\Desktop\\Dev\\HU-Vision-1718-Base\\testsets\\Set A\\TestSet Images\\male-3.png", *input)) {
 		std::cout << "Image could not be loaded!" << std::endl;
 		system("pause");
 		return 0;
@@ -60,11 +66,27 @@ bool executeSteps(DLLExecution * executor) {
 		return false;
 	}
 	ImageIO::saveIntensityImage(*executor->resultPreProcessingStep2, ImageIO::getDebugFileName("Pre-processing-2.png"));
+	auto total = 0;
+	int count = 1;
+	
+	
+	for (int i = 0; i < count; i++) {
+		auto start = get_time::now();
+		if (!executor->executePreProcessingStep3(false)) {
+			std::cout << "Pre-processing step 3 failed!" << std::endl;
+			return false;
+		}
+		auto end = get_time::now();
+		auto diff = end - start;
 
-	if (!executor->executePreProcessingStep3(true)) {
-		std::cout << "Pre-processing step 3 failed!" << std::endl;
-		return false;
+		total += std::chrono::duration_cast<ms>(diff).count();
+		std::cout << " total : " << total << std::endl;
 	}
+
+	std::cout << " total / count: " << total / count << std::endl;
+	
+	
+
 	ImageIO::saveIntensityImage(*executor->resultPreProcessingStep3, ImageIO::getDebugFileName("Pre-processing-3.png"));
 
 	if (!executor->executePreProcessingStep4(false)) {
